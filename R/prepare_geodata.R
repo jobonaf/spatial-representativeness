@@ -2,7 +2,7 @@ pollutant <- "PM10"
 countries <- "Italy"
 library(futile.logger)
 
-# air quality index
+# air quality index: kriging
 library(raster)
 library(glue)
 for (pollutant in c("PM10","NO2")) {
@@ -10,11 +10,27 @@ for (pollutant in c("PM10","NO2")) {
     ff <- glue("/lustre/arpa/operative/data/ariareg/databases/airq_reg/1001F0B0D0_{year}/kriging_CivilYear/",
                "{year}0101/data/output/{pollutant}_{year}_CivilYear_Avg_DLGS155_02_2011_ukriging.asc")
     if(!file.exists(ff)) ff <- glue("/lustre/arpa/operative/data/ariareg/databases/airq_reg/1001F0B0D0_{year}/kriging_CivilYear/",
-               "{year}0101/data/output/{pollutant}_{year}_CivilYear_Avg_DLGS155_02_2011_ukriging_wet.asc")
+                                    "{year}0101/data/output/{pollutant}_{year}_CivilYear_Avg_DLGS155_02_2011_ukriging_wet.asc")
     flog.info(ff)
     r <- raster(ff)
-  crs(r) <- "+init=epsg:32633"
-  saveRDS(r, file = glue("data/FARM_KED_{pollutant}_{year}.rds"))
+    crs(r) <- "+init=epsg:32633"
+    saveRDS(r, file = glue("data/KED_{pollutant}_{year}.rds"))
+  }
+}
+rk <- r
+
+# air quality index: CTM as is
+for (pollutant in c("PM10","NO2")) {
+  for (year in 2017:2020) {
+    ff <- glue("/lustre/arpa/operative/data/ariareg/databases/airq_reg/1001F0B0D0_{year}/kriging_CivilYear/",
+               "{year}0101/data/input/guida/{pollutant}_{year}_CivilYear_Avg.nc")
+    if(!file.exists(ff)) ff <- glue("/lustre/arpa/operative/data/ariareg/databases/airq_reg/1001F0B0D0_{year}/kriging_CivilYear/",
+                                    "{year}0101/data/input/guida/{pollutant}w_{year}_CivilYear_Avg.nc")
+    flog.info(ff)
+    r <- raster(ff, varname=glue("c_{pollutant}"))
+    crs(r) <- "+init=epsg:32633 +units=km"
+    r <- projectRaster(r, rk)
+    saveRDS(r, file = glue("data/FARM_{pollutant}_{year}.rds"))
   }
 }
 
