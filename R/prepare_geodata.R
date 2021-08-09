@@ -20,7 +20,7 @@ for (pollutant in c("PM10","NO2")) {
 rk <- r
 
 # air quality index: CTM as is
-for (pollutant in c("PM10","NO2")) {
+for (pollutant in c("PM10","NO2","O3")) {
   for (year in 2017:2020) {
     ff <- glue("/lustre/arpa/operative/data/ariareg/databases/airq_reg/1001F0B0D0_{year}/kriging_CivilYear/",
                "{year}0101/data/input/guida/{pollutant}_{year}_CivilYear_Avg.nc")
@@ -43,7 +43,7 @@ saveRDS(pop, file = "data/pop.rds")
 # air quality zones
 Zones <- rgdal::readOGR("/lustre/arpa/bonafeg/data/geo/ZoneAria/AQZonesEEA2021/Countries.shp")
 # select pollutant and countries
-for (pollutant in c("PM10","NO2")) {
+for (pollutant in c("PM10","NO2","O3")) {
   flog.info(glue("Preparing zones for {pollutant}"))
   sel.poll <- sapply(strsplit(as.character(Zones@data$Pollutant),";"), function(x)any(x==pollutant))
   sel.country <- Zones@data$CountryOrT %in% countries
@@ -64,7 +64,7 @@ for (pollutant in c("PM10","NO2")) {
 library(glue)
 library(sp)
 source("~/src/carminio/R/read_bronx.R")
-for (pollutant in c("PM10","NO2")) {
+for (pollutant in c("PM10","NO2","O3")) {
   flog.info(glue("Preparing stations for {pollutant}"))
   FUN <- ifelse(pollutant%in%c("PM10","PM2.5"),get_daily,get_hourly)
   dd <- FUN(pollutant = pollutant, year = 2020)
