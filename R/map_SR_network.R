@@ -2,7 +2,7 @@ library(futile.logger)
 library(glue)
 
 # maps SR stations
-for (pollutant in c("PM10","NO2")) {
+for (pollutant in c("PM10","NO2","O3")) {
   for (mm in c("FARM","KED")) {
     
     Dat <- NULL

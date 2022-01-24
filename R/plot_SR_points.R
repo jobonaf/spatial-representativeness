@@ -3,7 +3,7 @@ library(glue)
 
 
 # scatter plot represented area vs pop
-for (pollutant in c("PM10","NO2")) {
+for (pollutant in c("PM10","NO2","O3")) {
   pp <- readRDS(glue("data/stations_FVG_{pollutant}.rds"))
   for (mm in c("FARM","KED")) {
     pdf(glue("SR_AreaVsPop_{mm}_{pollutant}.pdf"))
@@ -31,7 +31,7 @@ for (pollutant in c("PM10","NO2")) {
 }
 
 # boxplot represented area vs pop
-for (pollutant in c("PM10","NO2")) {
+for (pollutant in c("PM10","NO2","O3")) {
   pp <- readRDS(glue("data/stations_FVG_{pollutant}.rds"))
   for (mm in c("FARM","KED")) {
     Dat <- NULL

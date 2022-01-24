@@ -6,7 +6,7 @@ library(ggplot2)
 library(ggrepel)
 
 # maps SR stations
-for (pollutant in c("PM10","NO2")) {
+for (pollutant in c("PM10","NO2","O3")) {
   for (mm in c("FARM","KED")) {
     pdf(glue("SR_map_{mm}_{pollutant}.pdf"), height=8, width = 9)
     for( year in 2015:2020) {

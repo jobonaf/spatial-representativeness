@@ -12,7 +12,7 @@ coordinates(pp) <- ~x+y
 crs(pp) <- "+init=epsg:32633"
 library(sp)
 pz <- NULL
-for(poll in c("PM10","NO2")) {
+for(poll in c("PM10","NO2","O3")) {
   load(glue("/lustre/arpa/bonafeg/scratch/spatial-representativeness/data/zones_{poll}.rda"))
   pz <- bind_rows(pz, bind_cols(pp@data, over(pp,zfvg) %>% dplyr::select(ZoneId) %>% droplevels(),  pollutant=poll))
 }
@@ -40,13 +40,14 @@ for (poll in unique(pdat$pollutant)) {
       xlab("relative tolerance")+
       scale_fill_discrete(name="contiguity\ncriterion")+
       scale_color_discrete(name="contiguity\ncriterion")+
-      scale_x_continuous(labels = scales::percent_format(accuracy = 1))+
+      scale_x_sqrt(labels = scales::percent_format(accuracy = 1), breaks=unique(pdat$rel_tol))+
       scale_y_continuous(labels = scales::number_format(accuracy = 1))+
       facet_wrap(~Station, scales="free_y")+
       theme_bw()+
       theme(panel.grid.minor = element_blank(),
             strip.placement="outside",
-            strip.background = element_blank())-> p
+            strip.background = element_blank(),
+            axis.text.x = element_text(angle=90, hjust = 1, vjust = 0.5))-> p
     print(p)
   }
 }

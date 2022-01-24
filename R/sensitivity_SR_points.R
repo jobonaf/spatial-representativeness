@@ -3,7 +3,7 @@ library(dplyr)
 mm <- "FARM"
 pop <- readRDS("/lustre/arpa/bonafeg/scratch/spatial-representativeness/data/pop.rds")
 SR <- NULL
-for (pollutant in c("PM10","NO2")) {
+for (pollutant in c("PM10","NO2","O3")) {
   # load data
   load(glue("data/zones_{pollutant}.rda"))
   pp <- readRDS(glue("data/stations_FVG_{pollutant}.rds"))
@@ -14,7 +14,8 @@ for (pollutant in c("PM10","NO2")) {
     r <- readRDS(modfile)
     
     # processing
-    for (rel_tol in (1:10)*0.05) {
+    rts <- c(0.02, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5)
+    for (rel_tol in rts) {
       for (cc in c(T,F)) {
         sr <-SR_points(r, pop, zfvg, pp[pp$SourceType=="BKG",], rel_tolerance=c(-rel_tol,+rel_tol), cont = cc)
         SR <- bind_rows(SR, sr$SR_data %>% mutate(contiguous=cc, year=year, rel_tol=rel_tol, pollutant=pollutant, model=mm))
