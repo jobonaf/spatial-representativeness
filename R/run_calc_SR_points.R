@@ -14,7 +14,7 @@ for (pollutant in c("PM10","NO2","O3")) {
         r <- readRDS(modfile)
         
         # processing
-        sr <-SR_points(r, pop, zfvg, pp[pp$SourceType=="BKG",])
+        sr <-SR_points(r, pop, zfvg, pp[pp$SourceType=="BKG",],unc_based = T,pollutant = pollutant)
         saveRDS(sr, file = glue("out/SR_{mm}_{pollutant}_{year}.rds"))
       }
     }

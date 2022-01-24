@@ -2,7 +2,7 @@ library(futile.logger)
 library(glue)
 
 # for each point SR: area and population
-SR_points <- function(r, pop, zones, points, cont=F, ...) {
+SR_points <- function(r, pop, zones, points, cont=F, unc_based=T, pollutant, ...) {
   source("/lustre/arpa/bonafeg/scratch/spatial-representativeness/R/spat_repr.R")
   library(raster)
   library(magrittr)
@@ -13,7 +13,11 @@ SR_points <- function(r, pop, zones, points, cont=F, ...) {
     flog.info(glue("Processing site {points@data$Station[i]}"))
     x <- XY[i,1]
     y <- XY[i,2]
-    same_zone(r,x,y,zones) %>% similar(.,x,y, ...)  -> SR
+    if(unc_based) {
+      same_zone(r,x,y,zones) %>% in_uncertainty(.,x,y, pollutant=pollutant, ...)  -> SR
+    } else {
+      same_zone(r,x,y,zones) %>% similar(.,x,y, ...)  -> SR
+    }
     if(cont) SR %>% contiguous(.,x,y) -> SR
     bb <- c(bb,SR)
     sa <- c(sa, SR %>% region_area())

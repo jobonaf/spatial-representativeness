@@ -1,5 +1,5 @@
 library(raster)
-
+library(dartle)
 
 # calculate region of a raster with values similar to those in xy
 similar <- function(r,x,y,
@@ -13,7 +13,15 @@ similar <- function(r,x,y,
   return(out)
 }
 
-
+# calculate region of a raster with values included in
+# the FAIRMODE-style uncertainty range with respect to xy
+in_uncertainty <- function(r,x,y,pollutant) {
+  v <- raster::extract(r,cbind(x,y)) # value in the selected site
+  u <- U_obs_95_year(v,pollutant)    # uncertainty
+  out <- r >= (v-u) & r <= (v+u)     # cells included in the required uncertainty range
+  return(out)
+}
+  
 # keep only contiguous region where xy is
 contiguous <- function(r,x,y, directions=4) {
   nas <- which(is.na(values(r)))         # to keep NAs
