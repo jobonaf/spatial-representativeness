@@ -2,7 +2,7 @@
 R scripts and functions for Spatial Representativeness (SR) analysis based on the output of Air Quality Models
 
 ## context
-    \item [FAIRMODE] Forum for Air quality Modeling
-    \item [task CT8] Exposure and exceedance model indicators and network optimization
-    \item [exercise CT8.1] Spatial Representativeness (SR) area of monitoring stations
+- __FAIRMODE__ Forum for Air quality Modeling
+- __task CT8__ Exposure and exceedance model indicators and network optimization
+- __exercise CT8.1__ Spatial Representativeness (SR) area of monitoring stations
 
